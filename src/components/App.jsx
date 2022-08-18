@@ -17,7 +17,7 @@ class App extends Component {
           color: '#010101',
         }}
       >
-        React homework template
+        React homework template Hello Jim
       </div>
     );
   }

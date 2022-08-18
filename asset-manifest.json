@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/LeonidGHA/goit-react-hw-03-image-finder/static/css/main.7acaea2f.css",
+    "main.js": "/LeonidGHA/goit-react-hw-03-image-finder/static/js/main.8371aac0.js",
+    "index.html": "/LeonidGHA/goit-react-hw-03-image-finder/index.html",
+    "main.7acaea2f.css.map": "/LeonidGHA/goit-react-hw-03-image-finder/static/css/main.7acaea2f.css.map",
+    "main.8371aac0.js.map": "/LeonidGHA/goit-react-hw-03-image-finder/static/js/main.8371aac0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7acaea2f.css",
+    "static/js/main.8371aac0.js"
+  ]
+}

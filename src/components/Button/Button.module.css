@@ -1,0 +1,8 @@
+.btnLoadMore {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  background-color: mediumpurple;
+  padding: 10px;
+}

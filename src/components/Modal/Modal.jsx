@@ -1,5 +1,6 @@
 import css from './Modal.module.css';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 const modal = document.querySelector('#modal');
 function Modal({ title, onClick }) {
@@ -13,4 +14,8 @@ function Modal({ title, onClick }) {
   );
 }
 
+Modal.propTypes = {
+  title: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 export default Modal;

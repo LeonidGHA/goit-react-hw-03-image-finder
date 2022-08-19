@@ -1,4 +1,4 @@
-// import css from './ImageGallery.module.css';
+import PropTypes from 'prop-types';
 
 function ImageGalleryItem({ webformat, id, largeImg, tags, renderImgInModal }) {
   return (
@@ -7,5 +7,11 @@ function ImageGalleryItem({ webformat, id, largeImg, tags, renderImgInModal }) {
     </li>
   );
 }
-
+ImageGalleryItem.propTypes = {
+  webformat: PropTypes.string.isRequired,
+  id: PropTypes.number,
+  largeImg: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  renderImgInModal: PropTypes.func.isRequired,
+};
 export default ImageGalleryItem;

@@ -9,6 +9,7 @@ import Button from './Button/Button';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
+import getImages from './Pixabay-api';
 
 const newPixabayApi = new pixabayApi();
 class App extends Component {
@@ -16,25 +17,48 @@ class App extends Component {
     search: '',
     arrImage: [],
     page: 1,
-    hidden: true,
+    show: true,
     loading: false,
     showModal: false,
     title: '',
+    total: '',
   };
 
   componentDidMount() {
     // console.log(hits);
-    this.serachInApi();
-
     window.addEventListener('keydown', this.listenerKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { search, page } = this.state;
 
-    if (page !== prevState.page || search !== prevState.search) {
-      this.serachInApi();
+    if (search !== prevState.search) {
+      getImages(search, page)
+        .then(({ hits, total }) => {
+          this.setState({
+            arrImage: [...hits],
+            total: total,
+          });
+        })
+        .catch(err => console.log(err));
     }
+
+    if (page !== prevState.page) {
+      getImages(search, page)
+        .then(({ hits, total }) => {
+          this.setState({
+            arrImage: [...prevState.arrImage, ...hits],
+            total: total,
+          });
+        })
+        .catch(err => console.log(err));
+    }
+    // if (page !== prevState.page) {
+    //   this.serachInApi(prevState);
+    // }
+    // if (search !== prevState.search) {
+    //   this.serachInApi(prevState);
+    // }
   }
 
   componentWillUnmount() {
@@ -48,59 +72,61 @@ class App extends Component {
     }
   };
 
-  async serachInApi() {
-    this.setState({
-      loading: true,
-    });
-    try {
-      const { search, page } = this.state;
+  // async serachInApi(prevState) {
+  //   this.setState({
+  //     loading: true,
+  //   });
+  //   console.log(prevState);
+  //   try {
+  //     const { search, page } = this.state;
 
-      newPixabayApi.querySearch = search;
-      newPixabayApi.page = page;
-      const response = await newPixabayApi.takeSearchResults();
-      const { hits, total, totalHits } = response.data;
-      if (search === '' && page === 1) {
-        this.setState({
-          arrImage: [...hits],
-          loading: false,
-        });
-      }
-      if (search !== '' && page === 1) {
-        this.setState({
-          arrImage: [...hits],
-          hidden: true,
-          loading: false,
-        });
-        Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
-      }
-      if (page > 1) {
-        this.setState(({ arrImage }) => ({
-          arrImage: [...arrImage, ...hits],
-          hidden: true,
-          loading: false,
-        }));
-      }
-      if (hits.length < newPixabayApi.per_page) {
-        this.setState({
-          hidden: false,
-        });
-      }
-      if (total === 0) {
-        Notiflix.Report.failure(
-          'Not found',
-          'Sorry, there are no images matching your search query. Please try again.',
-          'Retry'
-        );
-        this.setState({
-          arrImage: [],
-          hidden: false,
-          loading: false,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //     newPixabayApi.querySearch = search;
+  //     newPixabayApi.page = page;
+
+  //     const response = await newPixabayApi.takeSearchResults();
+  //     const { hits, total } = response.data;
+
+  //     if (total === 0) {
+  //       this.setState({
+  //         arrImage: [],
+  //         show: false,
+  //         loading: false,
+  //       });
+  //       return Notiflix.Report.failure(
+  //         'Not found',
+  //         'Sorry, there are no images matching your search query. Please try again.',
+  //         'Retry'
+  //       );
+  //     }
+
+  //     if (search !== prevState.search) {
+  //       this.setState({
+  //         arrImage: [...hits],
+
+  //         show: true,
+  //         loading: false,
+  //       });
+  //       Notiflix.Notify.info(`Hooray! We found ${total} images.`);
+  //       console.log(`hi`);
+  //       return;
+  //     }
+
+  //     if (page > 1) {
+  //       this.setState(({ arrImage }) => ({
+  //         arrImage: [...arrImage, ...hits],
+  //         show: true,
+  //         loading: false,
+  //       }));
+  //     }
+  //     if (hits.length < newPixabayApi.per_page) {
+  //       this.setState({
+  //         show: true,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   onSubmitData = dataSearch => {
     this.setState({
@@ -142,8 +168,8 @@ class App extends Component {
       renderImgInModal,
       onClikCloseBackDrop,
     } = this;
-    const { arrImage, hidden, loading, showModal, title } = this.state;
-
+    const { arrImage, show, loading, showModal, title } = this.state;
+    console.log(arrImage);
     return (
       <>
         <div className={css.App}>
@@ -155,7 +181,7 @@ class App extends Component {
           />
           {loading && <Loader />}
         </div>
-        {hidden && <Button onClickAdd={onClickAddImg} />}
+        {show && <Button onClickAdd={onClickAddImg} />}
       </>
     );
   }

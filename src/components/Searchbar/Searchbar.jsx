@@ -21,6 +21,7 @@ class Searchbar extends Component {
     // console.log(e);
     const { search } = this.state;
     if (search === '') {
+      this.reset();
       return Notiflix.Notify.failure('Enter the image name first');
     }
     this.props.onSubmit(search);

@@ -18,7 +18,6 @@ class App extends Component {
     showBtn: false,
     loading: false,
     showModal: false,
-    title: '',
     total: '',
   };
 
@@ -68,7 +67,6 @@ class App extends Component {
             this.setState({
               showBtn: false,
             });
-            console.log(total);
           }
           this.setState({
             arrImage: [...prevState.arrImage, ...hits],

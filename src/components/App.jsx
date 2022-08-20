@@ -3,7 +3,6 @@ import Notiflix from 'notiflix';
 
 import css from './App.module.css';
 
-import { pixabayApi } from './Pixabay-api';
 import Searchbar from './Searchbar/Searchbar';
 import Button from './Button/Button';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -11,13 +10,12 @@ import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
 import getImages from './Pixabay-api';
 
-const newPixabayApi = new pixabayApi();
 class App extends Component {
   state = {
     search: '',
     arrImage: [],
     page: 1,
-    show: true,
+    showBtn: false,
     loading: false,
     showModal: false,
     title: '',
@@ -25,7 +23,6 @@ class App extends Component {
   };
 
   componentDidMount() {
-    // console.log(hits);
     window.addEventListener('keydown', this.listenerKeyDown);
   }
 
@@ -33,32 +30,54 @@ class App extends Component {
     const { search, page } = this.state;
 
     if (search !== prevState.search) {
+      this.setState({
+        loading: true,
+      });
       getImages(search, page)
         .then(({ hits, total }) => {
+          if (total === 0) {
+            this.setState({
+              loading: false,
+              showBtn: false,
+              arrImage: [],
+            });
+            return Notiflix.Report.failure(
+              'Not found',
+              'Sorry, there are no images matching your search query. Please try again.',
+              'Retry'
+            );
+          }
+          Notiflix.Notify.info(`Hooray! We found ${total} images.`);
           this.setState({
             arrImage: [...hits],
             total: total,
+            showBtn: true,
+            loading: false,
           });
         })
         .catch(err => console.log(err));
     }
 
     if (page !== prevState.page) {
+      this.setState({
+        loading: true,
+      });
       getImages(search, page)
         .then(({ hits, total }) => {
+          if (hits.length < 12) {
+            this.setState({
+              showBtn: false,
+            });
+            console.log(total);
+          }
           this.setState({
             arrImage: [...prevState.arrImage, ...hits],
             total: total,
+            loading: false,
           });
         })
         .catch(err => console.log(err));
     }
-    // if (page !== prevState.page) {
-    //   this.serachInApi(prevState);
-    // }
-    // if (search !== prevState.search) {
-    //   this.serachInApi(prevState);
-    // }
   }
 
   componentWillUnmount() {
@@ -71,62 +90,6 @@ class App extends Component {
       // this.onClickToggleModal();
     }
   };
-
-  // async serachInApi(prevState) {
-  //   this.setState({
-  //     loading: true,
-  //   });
-  //   console.log(prevState);
-  //   try {
-  //     const { search, page } = this.state;
-
-  //     newPixabayApi.querySearch = search;
-  //     newPixabayApi.page = page;
-
-  //     const response = await newPixabayApi.takeSearchResults();
-  //     const { hits, total } = response.data;
-
-  //     if (total === 0) {
-  //       this.setState({
-  //         arrImage: [],
-  //         show: false,
-  //         loading: false,
-  //       });
-  //       return Notiflix.Report.failure(
-  //         'Not found',
-  //         'Sorry, there are no images matching your search query. Please try again.',
-  //         'Retry'
-  //       );
-  //     }
-
-  //     if (search !== prevState.search) {
-  //       this.setState({
-  //         arrImage: [...hits],
-
-  //         show: true,
-  //         loading: false,
-  //       });
-  //       Notiflix.Notify.info(`Hooray! We found ${total} images.`);
-  //       console.log(`hi`);
-  //       return;
-  //     }
-
-  //     if (page > 1) {
-  //       this.setState(({ arrImage }) => ({
-  //         arrImage: [...arrImage, ...hits],
-  //         show: true,
-  //         loading: false,
-  //       }));
-  //     }
-  //     if (hits.length < newPixabayApi.per_page) {
-  //       this.setState({
-  //         show: true,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   onSubmitData = dataSearch => {
     this.setState({
@@ -168,8 +131,8 @@ class App extends Component {
       renderImgInModal,
       onClikCloseBackDrop,
     } = this;
-    const { arrImage, show, loading, showModal, title } = this.state;
-    console.log(arrImage);
+    const { arrImage, showBtn, loading, showModal, title } = this.state;
+    // console.log(arrImage);
     return (
       <>
         <div className={css.App}>
@@ -181,7 +144,7 @@ class App extends Component {
           />
           {loading && <Loader />}
         </div>
-        {show && <Button onClickAdd={onClickAddImg} />}
+        {showBtn && <Button onClickAdd={onClickAddImg} />}
       </>
     );
   }

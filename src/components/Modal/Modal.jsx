@@ -4,22 +4,6 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 
 const modal = document.querySelector('#modal');
-// function Modal({ title, onClick }) {
-//   return createPortal(
-//     <div className={css.backdrop} onClick={onClick}>
-//       <div className={css.modal}>
-//         <img src={title} alt="" />
-//       </div>
-//     </div>,
-//     modal
-//   );
-// }
-
-// Modal.propTypes = {
-//   title: PropTypes.string.isRequired,
-//   onClick: PropTypes.func.isRequired,
-// };
-// export default Modal;
 
 class Modal extends Component {
   state = {};
@@ -34,8 +18,9 @@ class Modal extends Component {
 
   listenerKeyDown = e => {
     if (e.code === 'Escape') {
+      console.log(`esc`);
       // this.setState({ showModal: false });
-      // this.onClickToggleModal();
+
       this.props.onClick();
     }
   };
@@ -48,10 +33,7 @@ class Modal extends Component {
 
   render() {
     return createPortal(
-      <div
-        className={css.backdrop}
-        onClick={(this.listenerKeyDown, this.onClikCloseBackDrop)}
-      >
+      <div className={css.backdrop} onClick={this.onClikCloseBackDrop}>
         <div className={css.modal}>{this.props.children}</div>
       </div>,
       modal

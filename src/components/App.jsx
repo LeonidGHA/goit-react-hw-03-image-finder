@@ -21,10 +21,6 @@ class App extends Component {
     total: '',
   };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.listenerKeyDown);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const { search, page } = this.state;
 
@@ -78,17 +74,6 @@ class App extends Component {
     }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.listenerKeyDown);
-  }
-
-  listenerKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.setState({ showModal: false });
-      // this.onClickToggleModal();
-    }
-  };
-
   onSubmitData = dataSearch => {
     this.setState({
       search: dataSearch,
@@ -123,18 +108,17 @@ class App extends Component {
   };
 
   render() {
-    const {
-      onSubmitData,
-      onClickAddImg,
-      renderImgInModal,
-      onClikCloseBackDrop,
-    } = this;
+    const { onSubmitData, onClickAddImg, renderImgInModal } = this;
     const { arrImage, showBtn, loading, showModal, title } = this.state;
     // console.log(arrImage);
     return (
       <>
         <div className={css.App}>
-          {showModal && <Modal title={title} onClick={onClikCloseBackDrop} />}
+          {showModal && (
+            <Modal onClick={this.onClickToggleModal}>
+              <img src={title} alt="" />
+            </Modal>
+          )}
           <Searchbar onSubmit={onSubmitData} />
           <ImageGallery
             arrImage={arrImage}

@@ -40,9 +40,18 @@ class Modal extends Component {
     }
   };
 
+  onClikCloseBackDrop = ({ target, currentTarget }) => {
+    if (target === currentTarget) {
+      this.props.onClick();
+    }
+  };
+
   render() {
     return createPortal(
-      <div className={css.backdrop} onClick={this.listenerKeyDown}>
+      <div
+        className={css.backdrop}
+        onClick={(this.listenerKeyDown, this.onClikCloseBackDrop)}
+      >
         <div className={css.modal}>{this.props.children}</div>
       </div>,
       modal

@@ -101,11 +101,11 @@ class App extends Component {
     });
   };
 
-  onClikCloseBackDrop = ({ target, currentTarget }) => {
-    if (target === currentTarget) {
-      this.onClickToggleModal();
-    }
-  };
+  // onClikCloseBackDrop = ({ target, currentTarget }) => {
+  //   if (target === currentTarget) {
+  //     this.onClickToggleModal();
+  //   }
+  // };
 
   render() {
     const { onSubmitData, onClickAddImg, renderImgInModal } = this;

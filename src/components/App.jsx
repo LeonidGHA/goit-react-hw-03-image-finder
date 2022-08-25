@@ -53,7 +53,7 @@ class App extends Component {
         .catch(err => console.log(err));
     }
 
-    if (page !== prevState.page) {
+    if (page !== prevState.page && page !== 1) {
       this.setState({
         loading: true,
       });
@@ -77,6 +77,7 @@ class App extends Component {
   onSubmitData = dataSearch => {
     this.setState({
       search: dataSearch,
+      page: 1,
     });
   };
 
@@ -100,12 +101,6 @@ class App extends Component {
       title,
     });
   };
-
-  // onClikCloseBackDrop = ({ target, currentTarget }) => {
-  //   if (target === currentTarget) {
-  //     this.onClickToggleModal();
-  //   }
-  // };
 
   render() {
     const { onSubmitData, onClickAddImg, renderImgInModal } = this;

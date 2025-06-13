@@ -3,8 +3,7 @@
 const axios = require('axios').default;
 
 export class pixabayApi {
-  #API_KEY = '28723731-5c15bd07d095f3f0e05de01ba';
-  #URL = 'https://pixabay.com/api/';
+
 
   constructor() {
     this.page = 1;
